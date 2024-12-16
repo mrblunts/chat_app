@@ -1,0 +1,157 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    animation: bodyFade 1.5s ease;
+}
+
+@keyframes bodyFade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    padding: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    opacity: 0;
+    animation: containerFadeIn 1s forwards;
+}
+
+@keyframes containerFadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.container:hover {
+    transform: scale(1.05);
+}
+
+.logo {
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+    transition: color 0.3s ease;
+}
+
+.logo:hover {
+    color: #5bc0be;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.input {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input:focus {
+    border-color: #74ebd5;
+    outline: none;
+    box-shadow: 0 0 5px rgba(116, 235, 213, 0.5);
+}
+
+.button {
+    padding: 10px;
+    background-color: #74ebd5;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+    background-color: #5bc0be;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.usersArea {
+    margin-top: 20px;
+}
+
+#onlineUsers {
+    list-style: none;
+    padding: 0;
+}
+
+.messageArea {
+    height: 300px;
+    overflow-y: auto;
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+}
+
+.messageArea.scrolled {
+    transform: translateY(-5px);
+}
+
+.message {
+    margin: 5px 0;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+    transition: transform 0.3s ease;
+}
+
+.message:hover {
+    transform: translateX(10px);
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+.username {
+    font-weight: bold;
+    color: #74ebd5;
+}
+
+.timestamp {
+    font-size: 0.8rem;
+    color: #999;
+    margin-left: 10px;
+}
+
+.typingIndicator {
+    font-style: italic;
+    color: #5bc0be;
+    padding-left: 5px;
+    width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typingAnimation 1.5s steps(20) infinite;
+}
+
+@keyframes typingAnimation {
+    0% { width: 0; }
+    100% { width: 80%; }
+}

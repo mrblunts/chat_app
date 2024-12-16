@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="styel.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="logo">Chat Room</h1>
+        <form class="form" id="form">
+            <input class="input" type="text" placeholder="Name" id="myname" required>
+            <input class="input" type="text" placeholder="Message" id="message" required>
+            <button class="button" type="submit">Send Message</button>
+        </form>
+
+        <!-- Online Users List -->
+        <div class="usersArea">
+            <h3>Online Users:</h3>
+            <ul id="onlineUsers"></ul>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div class="messageArea" id="messageArea"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        let socket = io();
+        let form = document.getElementById('form');
+        let myname = document.getElementById('myname');
+        let message = document.getElementById('message');
+        let messageArea = document.getElementById('messageArea');
+        let onlineUsersList = document.getElementById('onlineUsers');
+        
+        // Emit event when a user types their name
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            if (message.value && myname.value) {
+                socket.emit('send name', myname.value);
+                socket.emit('send message', message.value);
+                message.value = '';
+            }
+        });
+
+        // Listen for new messages from server
+        socket.on('send message', (chatData) => {
+            let { chat, timestamp, username } = chatData;
+            let chatContent = document.createElement('p');
+            chatContent.classList.add('message', 'chat');
+            chatContent.innerHTML = `<span class="username">${username}:</span> ${chat} <span class="timestamp">${timestamp}</span>`;
+            messageArea.appendChild(chatContent);
+            messageArea.scrollTop = messageArea.scrollHeight; // Auto-scroll
+        });
+
+        // Listen for user status (online/offline)
+        socket.on('update users', (users) => {
+            onlineUsersList.innerHTML = '';  // Clear the user list
+            users.forEach(user => {
+                let userItem = document.createElement('li');
+                userItem.textContent = `${user.name} (${user.status})`;
+                onlineUsersList.appendChild(userItem);
+            });
+        });
+
+        // Typing indicator
+        message.addEventListener('input', () => {
+            socket.emit('typing', myname.value);
+        });
+
+        message.addEventListener('blur', () => {
+            socket.emit('stop typing');
+        });
+
+        socket.on('typing', (username) => {
+            let typingIndicator = document.createElement('div');
+            typingIndicator.classList.add('typingIndicator');
+            typingIndicator.textContent = `${username} is typing...`;
+            if (!document.querySelector('.typingIndicator')) {
+                messageArea.appendChild(typingIndicator);
+            }
+        });
+
+        socket.on('stop typing', () => {
+            let typingIndicator = document.querySelector('.typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        });
+    </script>
+</body>
+
+</html> 
